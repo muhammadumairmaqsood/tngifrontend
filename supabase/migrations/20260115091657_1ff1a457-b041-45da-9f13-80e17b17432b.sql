@@ -1,0 +1,2 @@
+INSERT INTO site_content (slug, title, category, embed_url, description, icon, is_active, display_order)
+VALUES ('contact-form', 'Contact Us Form', 'forms', 'https://tally.so/embed/w7vK4V?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1', 'Main contact form for inquiries', 'MessageSquare', true, 0);
