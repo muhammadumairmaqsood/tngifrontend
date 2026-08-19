@@ -1,4 +1,13 @@
-import { Table, Tooltip, Image, message, Popconfirm, Skeleton } from "antd";
+import {
+  Table,
+  Tooltip,
+  Image,
+  message,
+  Popconfirm,
+  Skeleton,
+  Input,
+  Select,
+} from "antd";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { TbWorldUpload } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +17,11 @@ import {
   usePublishBlogMutation,
   useDeleteBlogMutation,
 } from "../../redux/api.js";
+import { useState } from "react";
 
 const Blogs = () => {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const { data, isLoading, error } = useGetBlogsQuery();
 
   const [publishBlog, { isLoading: isPublishing }] = usePublishBlogMutation();
@@ -19,6 +31,18 @@ const Blogs = () => {
   const navigate = useNavigate();
 
   const blogs = data?.blogs ?? [];
+  // ==========================================
+  // FILTER BLOG
+  // ==========================================
+  const filteredBlogs = blogs?.filter((blog) => {
+    const searchMatch = blog.title
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
+    const statusMatch = statusFilter === "all" || blog.status === statusFilter;
+
+    return searchMatch && statusMatch;
+  });
 
   // ==========================================
   // PUBLISH BLOG
@@ -194,6 +218,34 @@ const Blogs = () => {
 
       <div className="flex items-center justify-between py-3 px-2">
         <h1 className="text-2xl font-bold">Blogs Details</h1>
+        <div className="flex items-center gap-4 mb-5">
+          <Input
+            placeholder="Search blogs by title"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-[300px]"
+          />
+
+          <Select
+            value={statusFilter}
+            onChange={setStatusFilter}
+            className="w-[180px]"
+            options={[
+              {
+                value: "all",
+                label: "All Posts",
+              },
+              {
+                value: "published",
+                label: "Posted",
+              },
+              {
+                value: "draft",
+                label: "Unposted",
+              },
+            ]}
+          />
+        </div>
       </div>
 
       {/* Table */}
@@ -201,7 +253,7 @@ const Blogs = () => {
       <Table
         rowKey="_id"
         columns={columns}
-        dataSource={blogs}
+        dataSource={filteredBlogs}
         pagination={{
           pageSize: 5,
         }}

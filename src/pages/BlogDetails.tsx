@@ -34,26 +34,34 @@ const BlogDetails = () => {
     <Layout>
       <div>
         <div className="w-[90%] md:w-[85%] lg:w-[75%] mx-auto mt-10 mb-20">
-          <div className="flex items-center flex-col">
+          <div className="flex flex-col">
             {/* Title */}
-            <h1 className="w-[95%] md:w-[80%] text-3xl font-bold my-4">
+            <h1 className="w-full text-3xl md:text-5xl lg:text-6xl font-bold my-4">
               {blog.title}
             </h1>
 
             {/* Image */}
-            <img src={blog.featuredImage?.url} alt={blog.title} />
-
+            <div className="w-full aspect-[16/9] overflow-hidden">
+              <img
+                src={blog.featuredImage?.url}
+                alt={blog.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
             {/* Content */}
-            <div className="my-4 w-[95%] md:w-[80%] text-justify">
+            <div className="w-full my-6 text-justify">
               <div
                 dangerouslySetInnerHTML={{
                   __html: blog.content,
                 }}
               />
-              <div className="my-6 flex gap-4">
+
+              {/* Tags */}
+              <div className="my-6 flex gap-4 items-start">
                 <h3 className="font-semibold">Tags:</h3>
+
                 {blog.tags?.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-5">
+                  <div className="flex flex-wrap gap-2">
                     {blog.tags.map((tag, index) => (
                       <span
                         key={index}
